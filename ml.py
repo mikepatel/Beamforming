@@ -100,8 +100,7 @@ def build_model():
     m.add(Flatten())
 
     m.add(Dense(
-        units=4,
-        activation=softmax
+        units=4
     ))
 
     # configure how model will be trained
@@ -162,15 +161,34 @@ plt.show()
 ################################################################################
 # PREDICTIONS
 preds = model.predict(test_data)
-max_idx = []
-max_value = []
+max = []
 
+'''
+# Convert values back to range [1,5]
+for row in range(len(preds)):
+    for col in range(len(preds[row])):
+        preds[row][col] = preds[row][col] * 5
+
+        if(preds[row][col] < 1):
+            preds[row][col] = 1
+
+        if(preds[row][col] > 5):
+            preds[row][col] = 5
+
+        preds[row][col] = int(preds[row][col])
+'''
+
+# find max value of (A,B,C,D)
 for i in range(len(preds)):
-    max_idx.append(np.argmax(preds[i]))
-    max_value.append(np.max(preds[i]))
+    max_idx = np.argmax(preds[i])
+    max_value = np.max(preds[i])
+    max.append((max_idx, max_value))
 
 
-print(preds[:2])
-print(max_idx[:2], max_value[:2])
-print(test_data[:2])
+# PRINT OUT TO CONSOLE
+print("\n###################################################")
+print("\nSome predicted values (normalized): ", preds[:2])
+print("\nSome (index, max value) pairs: ", max[:2])
+print("\nSome actual test values: ", test_data[:2])
+
 
